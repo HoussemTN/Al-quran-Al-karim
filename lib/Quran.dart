@@ -23,11 +23,11 @@ class _QuranState extends State<Quran> {
       style: optionStyle,
     ),
     Text(
-      'Index 1: Business',
+      'Index 1:حفظ العلامة ',
       style: optionStyle,
     ),
     Text(
-      'Index 2: School',
+      'Index 2: الإنتقال إلى العلامة',
       style: optionStyle,
     ),
   ];
