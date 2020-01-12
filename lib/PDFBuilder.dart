@@ -3,9 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:quran/globals.dart' as globals;
-
 import 'Bookmark.dart';
-
 
 class PDFBuilder extends StatefulWidget {
   @override
@@ -15,25 +13,12 @@ class PDFBuilder extends StatefulWidget {
 class _PDFBuilderState extends State<PDFBuilder> {
   PDFDocument _document;
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
-  int currentPage = 569;
+  int currentPage = globals.currentPage;
   bool isBookmarked = false;
-
- Widget _bookmarkWidget =Container();
-
+  Widget _bookmarkWidget = Container();
 
   @override
   void initState() {
-    isBookmarked?  Align(
-      alignment: Alignment.topLeft,
-      child: Opacity(
-        opacity: 0.8,
-        child: Icon(
-          Icons.bookmark,
-          color: Colors.red[800],
-          size: 40.0,
-        ),
-      ),
-    ):Container();
     super.initState();
   }
 
@@ -53,7 +38,6 @@ class _PDFBuilderState extends State<PDFBuilder> {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       child: FutureBuilder<PDFDocument>(
         future: _getDocument(),
@@ -67,25 +51,25 @@ class _PDFBuilderState extends State<PDFBuilder> {
                     document: snapshot.data,
                     controller: new PageController(initialPage: 569),
                     builder: (PDFPageImage pageImage, bool isCurrentIndex) {
-                        if(pageImage.pageNumber.round().toInt()==globals.bookmarkedPage){
-                          isBookmarked=true;
-                      _bookmarkWidget =Bookmark();
-                        }else{
-                          isBookmarked=false;
-                          _bookmarkWidget=Container() ;
-                        }
-                           
-                        print("current:$currentPage");
+                      if (pageImage.pageNumber.round().toInt() ==
+                          globals.bookmarkedPage) {
+                        isBookmarked = true;
+                        _bookmarkWidget = Bookmark();
+                      } else {
+                        isBookmarked = false;
+                        _bookmarkWidget = Container();
+                      }
 
-                        Widget image =Stack(
-                            children: <Widget>[
-                              ExtendedImage.memory(
+                      print("current:$currentPage");
 
-                        pageImage.bytes,
-                        fit: BoxFit.fitWidth,
-                        // gesture not applied (minScale,maxScale,speed...)
-                        mode: ExtendedImageMode.gesture,
-                        initGestureConfigHandler: (_) => GestureConfig(
+                      Widget image = Stack(
+                        children: <Widget>[
+                          ExtendedImage.memory(
+                            pageImage.bytes,
+                            fit: BoxFit.fitWidth,
+                            // gesture not applied (minScale,maxScale,speed...)
+                            mode: ExtendedImageMode.gesture,
+                            initGestureConfigHandler: (_) => GestureConfig(
                               //minScale: 1,
                               // animationMinScale:1,
                               // maxScale: 1.1,
@@ -95,9 +79,10 @@ class _PDFBuilderState extends State<PDFBuilder> {
                               inPageView: true,
                               initialScale: 1,
                               cacheGesture: true,
-                        ),
-                        onDoubleTap: (ExtendedImageGestureState state) {
-                              final pointerDownPosition = state.pointerDownPosition;
+                            ),
+                            onDoubleTap: (ExtendedImageGestureState state) {
+                              final pointerDownPosition =
+                                  state.pointerDownPosition;
                               final begin = state.gestureDetails.totalScale;
                               double end;
                               if (begin == _doubleTapScales[0]) {
@@ -109,11 +94,11 @@ class _PDFBuilderState extends State<PDFBuilder> {
                                 scale: end,
                                 doubleTapPosition: pointerDownPosition,
                               );
-                        },
-                      ),
-                              _bookmarkWidget,
-                            ],
-                          );
+                            },
+                          ),
+                          _bookmarkWidget,
+                        ],
+                      );
 
                       if (isCurrentIndex) {
                         //currentPage=pageImage.pageNumber.round().toInt();
@@ -128,17 +113,15 @@ class _PDFBuilderState extends State<PDFBuilder> {
                     onPageChanged: (page) {
                       currentPage = page.round().toInt();
                       globals.currentPage = currentPage;
-                      if(currentPage==globals.bookmarkedPage){
-                        isBookmarked=true;
-                      }else {
+                      if (currentPage == globals.bookmarkedPage) {
+                        isBookmarked = true;
+                      } else {
                         isBookmarked = false;
                       }
                       print("$isBookmarked:$currentPage");
-
                     },
-
                   ),
-                    _bookmarkWidget,
+                  _bookmarkWidget,
                 ],
               ),
             );
@@ -162,28 +145,5 @@ class _PDFBuilderState extends State<PDFBuilder> {
     AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
     bool hasSupport = androidInfo.version.sdkInt >= 21;
     return hasSupport;
-  }
-
-  void showBookmark(int position) {
-    print("global: ${globals.currentPage}");
-    if (position == globals.bookmarkedPage) {
-      setState(() {
-        _bookmarkWidget =  Align(
-          alignment: Alignment.topLeft,
-          child: Opacity(
-            opacity: 0.8,
-            child: Icon(
-              Icons.bookmark,
-              color: Colors.red[800],
-              size: 40.0,
-            ),
-          ),
-        );
-      });
-    } else {
-      setState(() {
-        _bookmarkWidget = new Container();
-      });
-    }
   }
 }
