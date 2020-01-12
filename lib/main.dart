@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+
 import 'package:quran/Quran.dart';
 
 void main() => runApp(MyApp());
@@ -15,9 +16,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:Quran()
+      home:Quran(),);
 
-    );
+
   }
 }
 
