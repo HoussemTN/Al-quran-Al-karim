@@ -1,4 +1,5 @@
 import 'package:device_info/device_info.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 
@@ -12,37 +13,30 @@ class Quran extends StatefulWidget {
 class _QuranState extends State<Quran> {
   PDFDocument _document;
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
-  int currentPage;
+  int currentPage=569;
+  bool isBookmarked = false;
+
   final pageController =
       PageController(initialPage: 569, viewportFraction: 1, keepPage: true);
   int _selectedIndex = 0;
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: الفهرس',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 1:حفظ العلامة ',
-      style: optionStyle,
-    ),
-    Text(
-      'Index 2: الإنتقال إلى العلامة',
-      style: optionStyle,
-    ),
-  ];
+  static const TextStyle optionStyle =
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
   }
-
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+   showBookmark(currentPage);
+  }
   @override
   Widget build(BuildContext context) => MaterialApp(
         theme: ThemeData(primaryColor: Colors.white),
         home: Scaffold(
-          // appBar: AppBar(title: Text('PDFView example')),
+          // appBar: AppBar(title: Text('القرآن الكريم')),
           body: FutureBuilder<PDFDocument>(
             future: _getDocument(),
             builder: (context, snapshot) {
@@ -51,6 +45,11 @@ class _QuranState extends State<Quran> {
                   child: Stack(
                     children: <Widget>[
                       PDFView.builder(
+                        onPageChanged: (page) {
+                          currentPage = pageController.page.round().toInt();
+                                  showBookmark(currentPage);
+                          print(currentPage);
+                        },
                         scrollDirection: Axis.horizontal,
                         document: snapshot.data,
                         controller: pageController,
@@ -60,17 +59,17 @@ class _QuranState extends State<Quran> {
                             fit: BoxFit.fitWidth,
                             // gesture not applied (minScale,maxScale,speed...)
                             mode: ExtendedImageMode.gesture,
-                              initGestureConfigHandler: (_) => GestureConfig(
-                        //minScale: 1,
-                         // animationMinScale:1,
-                         // maxScale: 1.1,
-                          //animationMaxScale: 1,
-                          speed: 1,
-                          inertialSpeed: 100,
-                          inPageView: true,
-                          initialScale: 1,
-                          cacheGesture: true,
-                        ),
+                            initGestureConfigHandler: (_) => GestureConfig(
+                              //minScale: 1,
+                              // animationMinScale:1,
+                              // maxScale: 1.1,
+                              //animationMaxScale: 1,
+                              speed: 1,
+                              inertialSpeed: 100,
+                              inPageView: true,
+                              initialScale: 1,
+                              cacheGesture: true,
+                            ),
                             onDoubleTap: (ExtendedImageGestureState state) {
                               final pointerDownPosition =
                                   state.pointerDownPosition;
@@ -87,9 +86,11 @@ class _QuranState extends State<Quran> {
                               );
                             },
                           );
+
                           if (isCurrentIndex) {
+                            //currentPage=pageImage.pageNumber.round().toInt();
                             image = Hero(
-                              tag: 'pdf_view' + pageImage.pageNumber.toString(),
+                              tag: pageImage.pageNumber.toString(),
                               child: Container(child: image),
                               transitionOnUserGestures: true,
                             );
@@ -97,11 +98,22 @@ class _QuranState extends State<Quran> {
                           return image;
                         },
                       ),
-
+                      isBookmarked
+                          ? Align(
+                              alignment: Alignment.topLeft,
+                              child: Opacity(
+                                opacity: 0.8,
+                                child: Icon(
+                                  Icons.bookmark,
+                                  color: Colors.red[800],
+                                  size: 40.0,
+                                ),
+                              ),
+                            )
+                          : Container(),
                     ],
                   ),
                 );
-
               }
 
               if (snapshot.hasError) {
@@ -119,20 +131,20 @@ class _QuranState extends State<Quran> {
           bottomNavigationBar: BottomNavigationBar(
             items: const <BottomNavigationBarItem>[
               BottomNavigationBarItem(
-                icon: Icon(Icons.home),
-                title: Text('الفهرس'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.business),
-                title: Text('حفظ علامة'),
-              ),
-              BottomNavigationBarItem(
-                icon: Icon(Icons.school),
+                icon: Icon(Icons.book),
                 title: Text('الإنتقال إلى العلامة'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.bookmark),
+                title: Text('حفظ العلامة'),
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.format_list_numbered_rtl),
+                title: Text('الفهرس'),
               ),
             ],
             currentIndex: _selectedIndex,
-            selectedItemColor: Colors.amber[800],
+            selectedItemColor: Colors.red[800],
             onTap: _onItemTapped,
           ),
         ),
@@ -145,10 +157,17 @@ class _QuranState extends State<Quran> {
     return hasSupport;
   }
 
-  void currentPositionUpdate() {
-    setState(() {
-      currentPage = pageController.page.toInt();
-    });
+  void showBookmark(int position) {
+    print("called for page : $position");
+    if (position == 568) {
+      setState(() {
+        isBookmarked=true;
+      });
+    }else{
+      setState(() {
+        isBookmarked=false;
+      });
+    }
   }
 
   Future<PDFDocument> _getDocument() async {
