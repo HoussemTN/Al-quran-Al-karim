@@ -2,6 +2,7 @@ import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
+
 import 'package:quran/globals.dart' as globals;
 import 'Bookmark.dart';
 
@@ -42,6 +43,16 @@ class _PDFBuilderState extends State<PDFBuilder> {
     setState(() {
       _selectedIndex = index;
     });
+    if(index==0){
+      pageController.animateToPage(globals.bookmarkedPage-1, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+    }else if (index==1){
+setState(() {
+  globals.bookmarkedPage=globals.currentPage;
+  print(globals.bookmarkedPage);
+});
+
+
+    }
   }
   @override
   void initState() {
@@ -165,7 +176,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
           ),
         ],
         currentIndex: _selectedIndex,
-        selectedItemColor: Colors.red[800],
+        selectedItemColor: Colors.grey[600],
         onTap: _onItemTapped,
       ),
     );
