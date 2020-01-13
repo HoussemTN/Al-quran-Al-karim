@@ -14,13 +14,14 @@ class _PDFBuilderState extends State<PDFBuilder> {
   PDFDocument _document;
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
   int currentPage = globals.currentPage;
+  final pageController= new PageController(
+    initialPage: globals.currentPage);
   bool isBookmarked = false;
   Widget _bookmarkWidget = Container();
-
-  @override
-  void initState() {
-    super.initState();
-  }
+  //Bottom Navigation
+  int _selectedIndex = 0;
+  static const TextStyle optionStyle =
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   Future<PDFDocument> _getDocument() async {
     if (_document != null) {
@@ -36,10 +37,21 @@ class _PDFBuilderState extends State<PDFBuilder> {
     }
   }
 
+  // navigation event handler
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: FutureBuilder<PDFDocument>(
+    return Scaffold(
+      body: FutureBuilder<PDFDocument>(
         future: _getDocument(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -49,7 +61,8 @@ class _PDFBuilderState extends State<PDFBuilder> {
                   PDFView.builder(
                     scrollDirection: Axis.horizontal,
                     document: snapshot.data,
-                    controller: new PageController(initialPage: 569),
+                    controller: pageController,
+
                     builder: (PDFPageImage pageImage, bool isCurrentIndex) {
                       if (pageImage.pageNumber.round().toInt() ==
                           globals.bookmarkedPage) {
@@ -99,7 +112,6 @@ class _PDFBuilderState extends State<PDFBuilder> {
                           _bookmarkWidget,
                         ],
                       );
-
                       if (isCurrentIndex) {
                         //currentPage=pageImage.pageNumber.round().toInt();
                         image = Hero(
@@ -121,7 +133,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
                       print("$isBookmarked:$currentPage");
                     },
                   ),
-                  _bookmarkWidget,
+                  //_bookmarkWidget,
                 ],
               ),
             );
@@ -136,6 +148,25 @@ class _PDFBuilderState extends State<PDFBuilder> {
             return Center(child: CircularProgressIndicator());
           }
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            title: Text('الإنتقال إلى العلامة'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.bookmark),
+            title: Text('حفظ العلامة'),
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.format_list_numbered_rtl),
+            title: Text('الفهرس'),
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.red[800],
+        onTap: _onItemTapped,
       ),
     );
   }
