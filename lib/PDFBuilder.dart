@@ -15,14 +15,16 @@ class _PDFBuilderState extends State<PDFBuilder> {
   PDFDocument _document;
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
   int currentPage = globals.currentPage;
-  final pageController= new PageController(
-    initialPage: globals.currentPage);
+  final pageController = new PageController(
+      initialPage: globals.currentPage, viewportFraction: 1.1, keepPage: true);
   bool isBookmarked = false;
   Widget _bookmarkWidget = Container();
+  GlobalKey stickyKey = GlobalKey();
+
   //Bottom Navigation
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   Future<PDFDocument> _getDocument() async {
     if (_document != null) {
@@ -43,17 +45,17 @@ class _PDFBuilderState extends State<PDFBuilder> {
     setState(() {
       _selectedIndex = index;
     });
-    if(index==0){
-      pageController.animateToPage(globals.bookmarkedPage-1, duration: Duration(milliseconds: 500), curve: Curves.decelerate);
-    }else if (index==1){
-setState(() {
-  globals.bookmarkedPage=globals.currentPage;
-  print(globals.bookmarkedPage);
-});
-
-
+    if (index == 0) {
+      pageController.animateToPage(globals.bookmarkedPage - 1,
+          duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+    } else if (index == 1) {
+      setState(() {
+        globals.bookmarkedPage = globals.currentPage;
+        print(globals.bookmarkedPage);
+      });
     }
   }
+
   @override
   void initState() {
     super.initState();
@@ -73,7 +75,6 @@ setState(() {
                     scrollDirection: Axis.horizontal,
                     document: snapshot.data,
                     controller: pageController,
-
                     builder: (PDFPageImage pageImage, bool isCurrentIndex) {
                       if (pageImage.pageNumber.round().toInt() ==
                           globals.bookmarkedPage) {
@@ -86,41 +87,54 @@ setState(() {
 
                       print("current:$currentPage");
 
-                      Widget image = Stack(
+                      Widget image = Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: <Widget>[
-                          ExtendedImage.memory(
-                            pageImage.bytes,
-                            fit: BoxFit.fitWidth,
-                            // gesture not applied (minScale,maxScale,speed...)
-                            mode: ExtendedImageMode.gesture,
-                            initGestureConfigHandler: (_) => GestureConfig(
-                              //minScale: 1,
-                              // animationMinScale:1,
-                              // maxScale: 1.1,
-                              //animationMaxScale: 1,
-                              speed: 1,
-                              inertialSpeed: 100,
-                              inPageView: true,
-                              initialScale: 1,
-                              cacheGesture: true,
-                            ),
-                            onDoubleTap: (ExtendedImageGestureState state) {
-                              final pointerDownPosition =
-                                  state.pointerDownPosition;
-                              final begin = state.gestureDetails.totalScale;
-                              double end;
-                              if (begin == _doubleTapScales[0]) {
-                                end = _doubleTapScales[1];
-                              } else {
-                                end = _doubleTapScales[0];
-                              }
-                              state.handleDoubleTap(
-                                scale: end,
-                                doubleTapPosition: pointerDownPosition,
-                              );
-                            },
+                          Stack(
+                            children: <Widget>[
+                              ExtendedImage.memory(
+                                pageImage.bytes,
+                                fit: BoxFit.fitHeight,
+                                // gesture not applied (minScale,maxScale,speed...)
+                                mode: ExtendedImageMode.gesture,
+                                initGestureConfigHandler: (_) => GestureConfig(
+                                  //minScale: 1,
+                                  // animationMinScale:1,
+                                  // maxScale: 1.1,
+                                  //animationMaxScale: 1,
+                                  speed: 1,
+                                  inertialSpeed: 100,
+                                  inPageView: true,
+                                  initialScale: 1,
+                                  cacheGesture: true,
+                                ),
+                                onDoubleTap: (ExtendedImageGestureState state) {
+                                  final pointerDownPosition =
+                                      state.pointerDownPosition;
+                                  final begin = state.gestureDetails.totalScale;
+                                  double end;
+                                  if (begin == _doubleTapScales[0]) {
+                                    end = _doubleTapScales[1];
+                                  } else {
+                                    end = _doubleTapScales[0];
+                                  }
+                                  state.handleDoubleTap(
+                                    scale: end,
+                                    doubleTapPosition: pointerDownPosition,
+                                  );
+                                },
+                              ),
+                              _bookmarkWidget,
+                            ],
                           ),
-                          _bookmarkWidget,
+                          Align(
+                            alignment: Alignment.bottomCenter,
+                            child: Container(
+                              color: Colors.white,
+                              height: MediaQuery.of(context).size.height * 0.03,
+                              width: MediaQuery.of(context).size.width,
+                            ),
+                          ),
                         ],
                       );
                       if (isCurrentIndex) {
