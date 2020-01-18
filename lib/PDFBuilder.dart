@@ -24,7 +24,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
   //Bottom Navigation
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
 
   Future<PDFDocument> _getDocument() async {
     if (_document != null) {
@@ -35,7 +35,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
     } else {
       throw Exception(
         'PDF Rendering does not '
-        'support on the system of this version',
+            'support on the system of this version',
       );
     }
   }
@@ -69,104 +69,90 @@ class _PDFBuilderState extends State<PDFBuilder> {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             return SafeArea(
-              child: Stack(
-                children: <Widget>[
-                  PDFView.builder(
-                    scrollDirection: Axis.horizontal,
-                    document: snapshot.data,
-                    controller: pageController,
-                    builder: (PDFPageImage pageImage, bool isCurrentIndex) {
-                      if (pageImage.pageNumber.round().toInt() ==
-                          globals.bookmarkedPage) {
-                        isBookmarked = true;
-                        _bookmarkWidget = Bookmark();
-                      } else {
-                        isBookmarked = false;
-                        _bookmarkWidget = Container();
-                      }
+              child: PDFView.builder(
+                scrollDirection: Axis.horizontal,
+                document: snapshot.data,
+                controller: pageController,
+                builder: (PDFPageImage pageImage, bool isCurrentIndex) {
+                  if (pageImage.pageNumber.round().toInt() ==
+                      globals.bookmarkedPage) {
+                    isBookmarked = true;
+                    _bookmarkWidget = Bookmark();
+                  } else {
+                    isBookmarked = false;
+                    _bookmarkWidget = Container();
+                  }
 
-                      print("current:$currentPage");
+                  print("current:$currentPage");
 
-                      Widget image = Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              ExtendedImage.memory(
-                                pageImage.bytes,
-                                fit: BoxFit.fitHeight,
-                                // gesture not applied (minScale,maxScale,speed...)
-                                mode: ExtendedImageMode.gesture,
-                                initGestureConfigHandler: (_) => GestureConfig(
-                                  //minScale: 1,
-                                  // animationMinScale:1,
-                                  // maxScale: 1.1,
-                                  //animationMaxScale: 1,
-                                  speed: 1,
-                                  inertialSpeed: 100,
-                                  inPageView: true,
-                                  initialScale: 1,
-                                  cacheGesture: true,
-                                ),
-                                onDoubleTap: (ExtendedImageGestureState state) {
-                                  final pointerDownPosition =
-                                      state.pointerDownPosition;
-                                  final begin = state.gestureDetails.totalScale;
-                                  double end;
-                                  if (begin == _doubleTapScales[0]) {
-                                    end = _doubleTapScales[1];
-                                  } else {
-                                    end = _doubleTapScales[0];
-                                  }
-                                  state.handleDoubleTap(
-                                    scale: end,
-                                    doubleTapPosition: pointerDownPosition,
-                                  );
-                                },
-                              ),
-                              _bookmarkWidget,
-                            ],
-                          ),
-                          Align(
-                            alignment: Alignment.bottomCenter,
-                            child: Container(
-                              color: Colors.white,
-                              height: MediaQuery.of(context).size.height * 0.03,
-                              width: MediaQuery.of(context).size.width,
-                            ),
-                          ),
-                        ],
-                      );
-                      if (isCurrentIndex) {
-                        //currentPage=pageImage.pageNumber.round().toInt();
-                        image = Hero(
-                          tag: pageImage.pageNumber.toString(),
-                          child: Container(child: image),
-                          transitionOnUserGestures: true,
-                        );
-                      }
-                      return image;
-                    },
-                    onPageChanged: (page) {
-                      currentPage = page.round().toInt();
-                      globals.currentPage = currentPage;
-                      if (currentPage == globals.bookmarkedPage) {
-                        isBookmarked = true;
-                      } else {
-                        isBookmarked = false;
-                      }
-                      print("$isBookmarked:$currentPage");
-                    },
-                  ),
-                  //_bookmarkWidget,
-                ],
+
+                  Widget image =   Stack(
+                     fit: StackFit.expand,
+                       children: <Widget>[
+                        Container(
+                           child: ExtendedImage.memory(
+                             pageImage.bytes,
+                             // gesture not applied (minScale,maxScale,speed...)
+                             mode: ExtendedImageMode.gesture,
+                             initGestureConfigHandler: (_) => GestureConfig(
+                               //minScale: 1,
+                               // animationMinScale:1,
+                               // maxScale: 1.1,
+                               //animationMaxScale: 1,
+                               speed: 1,
+                               inertialSpeed: 100,
+                               //inPageView: true,
+                               initialScale: 1,
+                               cacheGesture: true,
+                             ),
+                             onDoubleTap: (ExtendedImageGestureState state) {
+                               final pointerDownPosition =
+                                   state.pointerDownPosition;
+                               final begin = state.gestureDetails.totalScale;
+                               double end;
+                               if (begin == _doubleTapScales[0]) {
+                                 end = _doubleTapScales[1];
+                               } else {
+                                 end = _doubleTapScales[0];
+                               }
+                               state.handleDoubleTap(
+                                 scale: end,
+                                 doubleTapPosition: pointerDownPosition,
+                               );
+                             },
+                           ),
+                         ),
+                        _bookmarkWidget,
+
+                   ],
+                 );
+                  if (isCurrentIndex) {
+                    //currentPage=pageImage.pageNumber.round().toInt();
+                    image = Hero(
+                      tag: pageImage.pageNumber.toString(),
+                      child: Container(child: image),
+                      transitionOnUserGestures: true,
+                    );
+                  }
+                  return image;
+                },
+                onPageChanged: (page) {
+                  currentPage = page.round().toInt();
+                  globals.currentPage = currentPage;
+                  if (currentPage == globals.bookmarkedPage) {
+                    isBookmarked = true;
+                  } else {
+                    isBookmarked = false;
+                  }
+                  print("$isBookmarked:$currentPage");
+                },
               ),
             );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
                 'PDF Rendering does not '
-                'support on the system of this version',
+                    'support on the system of this version',
               ),
             );
           } else {
