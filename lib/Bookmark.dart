@@ -10,7 +10,7 @@ class _BookmarkState extends State<Bookmark> {
   Widget build(BuildContext context) {
     return Container(
       child: Padding(
-        padding: const EdgeInsets.only(left: 16.0),
+        padding:  EdgeInsets.only(left: MediaQuery.of(context).size.width*0.05),
         child: Align(
           alignment: Alignment.topLeft,
           child: Opacity(
