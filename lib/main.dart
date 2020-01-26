@@ -1,25 +1,33 @@
-
 import 'package:flutter/material.dart';
-
-
 import 'Index.dart';
+import 'SplashScreen.dart';
 
 void main() => runApp(MyApp());
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-class MyApp extends StatelessWidget {
+class _MyAppState extends State<MyApp> {
 
-  // This widget is the root of your application.
+  @override
+  void initState() {
+    super.initState();
+
+  }
+
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
+      routes: {
+        'index':(context)=>Index(),
+      },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home:Index(),);
+      home:SplashScreen());
 
 
   }
 }
-

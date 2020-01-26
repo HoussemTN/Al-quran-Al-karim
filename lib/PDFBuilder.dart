@@ -51,7 +51,10 @@ class _PDFBuilderState extends State<PDFBuilder> {
       _selectedIndex = index;
     });
     if (index == 0) {
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PDFBuilder(pages:globals.bookmarkedPage)));
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(
+            builder: (context) =>
+                PDFBuilder(pages:globals.bookmarkedPage)),(Route<dynamic> route) => false);
 
     } else if (index == 1) {
       setState(() {
