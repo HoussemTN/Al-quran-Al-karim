@@ -8,20 +8,24 @@ import 'Widget/Bookmark.dart';
 import 'Index.dart';
 
 class PDFBuilder extends StatefulWidget {
-  @override
+
+  PDFBuilder({Key key, @required this.pages}) : super(key: key);
+ final int pages ;
+ @override
   _PDFBuilderState createState() => _PDFBuilderState();
 }
 
 class _PDFBuilderState extends State<PDFBuilder> {
+  // My Document
   PDFDocument _document;
+  // On Double Tap Zoom Scale
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
-  int currentPage = globals.currentPage;
-  final pageController = new PageController(
-      initialPage: globals.currentPage, viewportFraction: 1.1, keepPage: true);
+  // Current Page init (on page changed)
+  int currentPage;
+  // Init Page Controller
+  PageController pageController ;
   bool isBookmarked = false;
   Widget _bookmarkWidget = Container();
-  GlobalKey stickyKey = GlobalKey();
-
   //Bottom Navigation
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
@@ -42,13 +46,13 @@ class _PDFBuilderState extends State<PDFBuilder> {
   }
 
   // navigation event handler
-  void _onItemTapped(int index) {
+  _onItemTapped(int index ,PageController _pageController) {
     setState(() {
       _selectedIndex = index;
     });
     if (index == 0) {
-      pageController.animateToPage(globals.bookmarkedPage - 1,
-          duration: Duration(milliseconds: 500), curve: Curves.decelerate);
+      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => PDFBuilder(pages:globals.bookmarkedPage)));
+
     } else if (index == 1) {
       setState(() {
         globals.bookmarkedPage = globals.currentPage;
@@ -58,14 +62,21 @@ class _PDFBuilderState extends State<PDFBuilder> {
       Navigator.push(context,MaterialPageRoute(builder: (context)=>Index()));
     }
   }
-
+  PageController _pageControllerBuilder(){
+  return new PageController(initialPage: widget.pages,viewportFraction: 1.1, keepPage: true);
+  }
   @override
   void initState() {
+    setState(() {
+      pageController= _pageControllerBuilder();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    print("pages:${widget.pages}");
+    pageController= _pageControllerBuilder();
     return Scaffold(
       body: FutureBuilder<PDFDocument>(
         future: _getDocument(),
@@ -180,7 +191,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.grey[600],
-        onTap: _onItemTapped,
+        onTap:(index) =>_onItemTapped(index,pageController),
       ),
     );
   }

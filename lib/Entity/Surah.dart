@@ -5,7 +5,8 @@ class Surah {
   String title;
   String titleAr;
   String index;
-  String pages;
+  int pages;
+  int pageIndex;
   String juzIndex;
 
   Surah(
@@ -16,6 +17,7 @@ class Surah {
       this.titleAr,
       this.index,
       this.pages,
+      this.pageIndex,
       this.juzIndex});
 
   factory Surah.fromJson(Map<String, dynamic> json) {
@@ -26,7 +28,9 @@ class Surah {
       title: json['title'] as String,
       titleAr: json['titleAr'] as String,
       index: json['index'] as String,
-      pages: json['pages'] as String,
+      // reversed pages
+      pages:  569-int.parse(json['pages']),
+      pageIndex: int.parse(json['pages']),
       juzIndex: json['juzIndex'] as String,
     );
   }
