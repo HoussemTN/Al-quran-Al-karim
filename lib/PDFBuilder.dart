@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 
 import 'package:quran/globals.dart' as globals;
-import 'Bookmark.dart';
+import 'Widget/Bookmark.dart';
+import 'Index.dart';
 
 class PDFBuilder extends StatefulWidget {
   @override
@@ -31,7 +32,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
       return _document;
     }
     if (await hasSupport()) {
-      return _document = await PDFDocument.openAsset('assets/quran.pdf');
+      return _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
     } else {
       throw Exception(
         'PDF Rendering does not '
@@ -53,6 +54,8 @@ class _PDFBuilderState extends State<PDFBuilder> {
         globals.bookmarkedPage = globals.currentPage;
         print(globals.bookmarkedPage);
       });
+    }else if (index == 2){
+      Navigator.push(context,MaterialPageRoute(builder: (context)=>Index()));
     }
   }
 

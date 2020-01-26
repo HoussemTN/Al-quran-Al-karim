@@ -1,9 +1,5 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:quran/Bookmark.dart';
 import 'package:quran/PDFBuilder.dart';
-import 'package:quran/globals.dart' as globals;
 class Quran extends StatefulWidget {
   @override
   _QuranState createState() => _QuranState();
