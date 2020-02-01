@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
-
 import 'Entity/Surah.dart';
-import 'SurahListBuilder.dart';
+import 'Builder/SurahListBuilder.dart';
 class Index extends StatefulWidget {
   @override
   _IndexState createState() => _IndexState();
@@ -13,11 +12,19 @@ class _IndexState extends State<Index> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return MaterialApp(
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+        primaryColor: Colors.green,
+      ),
       home: Scaffold(
         appBar: AppBar(
+          leading:IconButton(
+            icon:Icon(Icons.book,
+            color: Colors.white,
+          ), onPressed: () {
+
+          },),
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -33,7 +40,7 @@ class _IndexState extends State<Index> {
         body: Container(
           child: Directionality(
             textDirection: TextDirection.rtl,
-            // Use future builder and DefaultAssetBundle to load the local JSON file
+            /// Use future builder and DefaultAssetBundle to load the local JSON file
             child: new FutureBuilder(
                 future: DefaultAssetBundle.of(context)
                     .loadString('assets/json/surah.json'),

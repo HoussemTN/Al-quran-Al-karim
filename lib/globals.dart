@@ -2,6 +2,7 @@ library quran.globals ;
 
 int currentPage  ;
 int bookmarkedPage ;
-int defaultBookmarkedPage=568;
+/// Default Bookmarked page (surat Al-baqara)
+int defaultBookmarkedPage=569;
 
 

@@ -5,8 +5,8 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 
 import 'package:quran/globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
-import 'Widget/Bookmark.dart';
-import 'Index.dart';
+import '../Widget/Bookmark.dart';
+import '../Index.dart';
 
 class PDFBuilder extends StatefulWidget {
   PDFBuilder({Key key, @required this.pages}) : super(key: key);
@@ -17,37 +17,40 @@ class PDFBuilder extends StatefulWidget {
 }
 
 class _PDFBuilderState extends State<PDFBuilder> {
-  // My Document
+  /// My Document
   PDFDocument _document;
 
-  // On Double Tap Zoom Scale
+  /// On Double Tap Zoom Scale
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
 
-  // Current Page init (on page changed)
+  /// Current Page init (on page changed)
   int currentPage;
 
-  // Init Page Controller
+  /// Init Page Controller
   PageController pageController;
 
   bool isBookmarked = false;
   Widget _bookmarkWidget = Container();
 
-  //Bottom Navigation
+  /// Used for Bottom Navigation
   int _selectedIndex = 0;
+  /// Style of tapped Bottom Navigation item
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  /// Declare SharedPreferences
   SharedPreferences prefs;
-
+  /// Load PDF Documents
   Future<PDFDocument> _getDocument() async {
     if (_document != null) {
       return _document;
     }
+    /// Check Compatibility's [Android 5.0+]
     if (await hasSupport()) {
       return _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
     } else {
       throw Exception(
-        'PDF Rendering does not '
-        'support on the system of this version',
+        'المعذرة لا يمكن طباعة المحتوى'
+        'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
       );
     }
   }

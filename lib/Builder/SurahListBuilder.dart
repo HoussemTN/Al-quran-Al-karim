@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:quran/PDFBuilder.dart';
-import 'Entity/Surah.dart';
+import 'package:quran/Builder/PDFBuilder.dart';
+import '../Entity/Surah.dart';
 
 class SurahListBuilder extends StatefulWidget {
   final List<Surah> surah;
@@ -13,30 +13,41 @@ class SurahListBuilder extends StatefulWidget {
 
 class _SurahListBuilderState extends State<SurahListBuilder> {
   TextEditingController editingController = TextEditingController();
+
   List<Surah> surah = List<Surah>();
 
   void initSurahListView() {
+    if(surah.isNotEmpty){
+      surah.clear();
+    }
     surah.addAll(widget.surah);
   }
 
   void filterSearchResults(String query) {
-    List<Surah> dummySearchList = List<Surah>();
-    dummySearchList.addAll(surah);
+    /// Fill surah list if empty
+    initSurahListView();
+    /// SearchList contains every surah
+    List<Surah> searchList = List<Surah>();
+    searchList.addAll(surah);
+    /// Contains matching surah(s)
+    List<Surah> listData = List<Surah>();
     if (query.isNotEmpty) {
-      List<Surah> dummyListData = List<Surah>();
-      dummySearchList.forEach((item) {
-        //filter by (titleAr:exact,title:partial,pageIndex)
+      /// Loop all surah(s)
+      searchList.forEach((item) {
+        /// Filter by (titleAr:exact,title:partial,pageIndex)
         if (item.titleAr.contains(query) ||
             item.title.toLowerCase().contains(query.toLowerCase()) ||
-            item.pageIndex == int.tryParse(query)) {
-          dummyListData.add(item);
+            item.pageIndex.toString().contains(query)) {
+          listData.add(item);
         }
       });
+      /// Fill surah List with searched surah(s)
       setState(() {
         surah.clear();
-        surah.addAll(dummyListData);
+        surah.addAll(listData);
       });
       return;
+      /// Show all surah list
     } else {
       setState(() {
         surah.clear();
@@ -47,6 +58,7 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
 
   @override
   void initState() {
+    /// Init listView with all surah(s)
     initSurahListView();
     super.initState();
   }
@@ -56,11 +68,14 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
     return Container(
       child: Column(
         children: <Widget>[
+          /// Search field
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextField(
+              cursorColor: Colors.green,
               onChanged: (value) {
-                filterSearchResults(value);
+                  filterSearchResults(value);
+                  print(value);
               },
               controller: editingController,
               decoration: InputDecoration(
@@ -68,9 +83,11 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
                   // hintText: "البحث",
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(25.0)))),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0)))
+              ),
             ),
           ),
+          /// ListView represent all/searched surah(s)
           Expanded(
             child: ListView.builder(
               itemCount: surah.length,
@@ -85,6 +102,7 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
                       height: 30),
                   trailing: Text("${surah[index].pageIndex}"),
                   onTap: () {
+                    /// Push to Quran view ([int pages] represent surah page(reversed index))
                     Navigator.push(
                         context,
                         MaterialPageRoute(
