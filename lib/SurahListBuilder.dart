@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:quran/PDFBuilder.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'Entity/Surah.dart';
 
 class SurahListBuilder extends StatelessWidget {
@@ -11,11 +11,11 @@ class SurahListBuilder extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+      itemExtent: 55,
       addAutomaticKeepAlives: false,
       itemBuilder: (BuildContext context, int index) => ListTile(
         title: Text(surah[index].titleAr),
         subtitle: Text(surah[index].title),
-          isThreeLine: true,
           leading: Image(
               image: AssetImage("assets/images/${surah[index].place}.png"),
               width: 30,
