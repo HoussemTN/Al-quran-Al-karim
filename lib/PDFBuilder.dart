@@ -9,9 +9,9 @@ import 'Widget/Bookmark.dart';
 import 'Index.dart';
 
 class PDFBuilder extends StatefulWidget {
-
   PDFBuilder({Key key, @required this.pages}) : super(key: key);
-  final int pages ;
+  final int pages;
+
   @override
   _PDFBuilderState createState() => _PDFBuilderState();
 }
@@ -19,19 +19,25 @@ class PDFBuilder extends StatefulWidget {
 class _PDFBuilderState extends State<PDFBuilder> {
   // My Document
   PDFDocument _document;
+
   // On Double Tap Zoom Scale
   static const List<double> _doubleTapScales = <double>[1.0, 1.1];
+
   // Current Page init (on page changed)
   int currentPage;
+
   // Init Page Controller
-  PageController pageController ;
+  PageController pageController;
+
   bool isBookmarked = false;
   Widget _bookmarkWidget = Container();
+
   //Bottom Navigation
   int _selectedIndex = 0;
   static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   SharedPreferences prefs;
+
   Future<PDFDocument> _getDocument() async {
     if (_document != null) {
       return _document;
@@ -41,27 +47,28 @@ class _PDFBuilderState extends State<PDFBuilder> {
     } else {
       throw Exception(
         'PDF Rendering does not '
-            'support on the system of this version',
+        'support on the system of this version',
       );
     }
   }
 
   // navigation event handler
-  _onItemTapped(int index ,PageController _pageController) {
+  _onItemTapped(int index, PageController _pageController) {
     setState(() {
       _selectedIndex = index;
     });
     //Go to Bookmarked page
     if (index == 0) {
       setState(() {
-        if(globals.bookmarkedPage!=null){
+        if (globals.bookmarkedPage != null) {
           getBookmark();
         }
       });
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (context) =>
-                  PDFBuilder(pages:globals.bookmarkedPage-1)),(Route<dynamic> route) => false);
+                  PDFBuilder(pages: globals.bookmarkedPage - 1)),
+          (Route<dynamic> route) => false);
 
       //Bookmark this page
     } else if (index == 1) {
@@ -69,62 +76,64 @@ class _PDFBuilderState extends State<PDFBuilder> {
         globals.bookmarkedPage = globals.currentPage;
         print("toSave: ${globals.bookmarkedPage}");
       });
-      if(globals.bookmarkedPage!=null){
+      if (globals.bookmarkedPage != null) {
         setBookmark(globals.bookmarkedPage);
       }
 
       //got to index
-    }else if (index == 2){
-      Navigator.push(context,MaterialPageRoute(builder: (context)=>Index()));
+    } else if (index == 2) {
+      Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
     }
   }
-  PageController _pageControllerBuilder(){
-    return new PageController(initialPage: widget.pages,viewportFraction: 1.1, keepPage: true);
+
+  PageController _pageControllerBuilder() {
+    return new PageController(
+        initialPage: widget.pages, viewportFraction: 1.1, keepPage: true);
   }
+
   // set bookmarkPage in sharedPreferences
-  void setBookmark(int page)async{
+  void setBookmark(int page) async {
     prefs = await SharedPreferences.getInstance();
-    if(page!=null && !page.isNaN){
-      await prefs.setInt('bookmarkedPage',page);
+    if (page != null && !page.isNaN) {
+      await prefs.setInt('bookmarkedPage', page);
     }
   }
+
   // get bookmarkPage from sharedPreferences
-  getBookmark()async{
+  getBookmark() async {
     prefs = await SharedPreferences.getInstance();
-    if(prefs.containsKey('bookmarkedPage')){
+    if (prefs.containsKey('bookmarkedPage')) {
       var bookmarkedPage = prefs.getInt('bookmarkedPage');
       setState(() {
-        globals.bookmarkedPage=bookmarkedPage;
+        globals.bookmarkedPage = bookmarkedPage;
       });
       // if not found return default value
-    }else{
-      globals.bookmarkedPage=globals.defaultBookmarkedPage;
+    } else {
+      globals.bookmarkedPage = globals.defaultBookmarkedPage;
     }
   }
 
   @override
   void initState() {
     setState(() {
-      if(globals.bookmarkedPage==null){
+      if (globals.bookmarkedPage == null) {
         getBookmark();
       }
       //init current page
-      globals.currentPage=widget.pages;
-      pageController= _pageControllerBuilder();
+      globals.currentPage = widget.pages;
+      pageController = _pageControllerBuilder();
     });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
-    pageController= _pageControllerBuilder();
+    pageController = _pageControllerBuilder();
     return Scaffold(
       body: FutureBuilder<PDFDocument>(
         future: _getDocument(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-
             return SafeArea(
               child: PDFView.builder(
                 scrollDirection: Axis.horizontal,
@@ -140,13 +149,12 @@ class _PDFBuilderState extends State<PDFBuilder> {
                   }
                   print("$isBookmarked:$currentPage");
                   if (isBookmarked) {
-                     _bookmarkWidget = Bookmark();
+                    _bookmarkWidget = Bookmark();
                   } else {
-                      _bookmarkWidget = Container();
+                    _bookmarkWidget = Container();
                   }
 
-
-                  Widget image =   Stack(
+                  Widget image = Stack(
                     fit: StackFit.expand,
                     children: <Widget>[
                       Container(
@@ -182,9 +190,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
                           },
                         ),
                       ),
-                      isBookmarked == true ? _bookmarkWidget:Container(),
-
-
+                      isBookmarked == true ? _bookmarkWidget : Container(),
                     ],
                   );
                   if (isCurrentIndex) {
@@ -197,16 +203,14 @@ class _PDFBuilderState extends State<PDFBuilder> {
                   }
                   return image;
                 },
-                onPageChanged: (page) {
-
-                },
+                onPageChanged: (page) {},
               ),
             );
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
                 'PDF Rendering does not '
-                    'support on the system of this version',
+                'support on the system of this version',
               ),
             );
           } else {
@@ -231,7 +235,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.grey[600],
-        onTap:(index) =>_onItemTapped(index,pageController),
+        onTap: (index) => _onItemTapped(index, pageController),
       ),
     );
   }
@@ -243,4 +247,3 @@ class _PDFBuilderState extends State<PDFBuilder> {
     return hasSupport;
   }
 }
-
