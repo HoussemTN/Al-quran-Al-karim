@@ -37,8 +37,6 @@ class _PDFBuilderState extends State<PDFBuilder> {
       return _document;
     }
     if (await hasSupport()) {
-      prefs = await SharedPreferences.getInstance();
-      getBookmark();
       return _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
     } else {
       throw Exception(
@@ -56,7 +54,9 @@ class _PDFBuilderState extends State<PDFBuilder> {
     //Go to Bookmarked page
     if (index == 0) {
       setState(() {
-        getBookmark();
+        if(globals.bookmarkedPage!=null){
+          getBookmark();
+        }
       });
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
@@ -67,9 +67,11 @@ class _PDFBuilderState extends State<PDFBuilder> {
     } else if (index == 1) {
       setState(() {
         globals.bookmarkedPage = globals.currentPage;
-        print("toSave${globals.bookmarkedPage}");
-        setBookmark(globals.bookmarkedPage);
+        print("toSave: ${globals.bookmarkedPage}");
       });
+      if(globals.bookmarkedPage!=null){
+        setBookmark(globals.bookmarkedPage);
+      }
 
       //got to index
     }else if (index == 2){
@@ -79,23 +81,18 @@ class _PDFBuilderState extends State<PDFBuilder> {
   PageController _pageControllerBuilder(){
     return new PageController(initialPage: widget.pages,viewportFraction: 1.1, keepPage: true);
   }
-  @override
-  void initState() {
-    setState(() {
-      //init current page
-      globals.currentPage=widget.pages;
-      pageController= _pageControllerBuilder();
-    });
-    super.initState();
-  }
   // set bookmarkPage in sharedPreferences
   void setBookmark(int page)async{
-    await prefs.setInt('bookmarkedPage',page);
- }
+    prefs = await SharedPreferences.getInstance();
+    if(page!=null && !page.isNaN){
+      await prefs.setInt('bookmarkedPage',page);
+    }
+  }
   // get bookmarkPage from sharedPreferences
   getBookmark()async{
+    prefs = await SharedPreferences.getInstance();
     if(prefs.containsKey('bookmarkedPage')){
-    var bookmarkedPage = prefs.getInt('bookmarkedPage');
+      var bookmarkedPage = prefs.getInt('bookmarkedPage');
       setState(() {
         globals.bookmarkedPage=bookmarkedPage;
       });
@@ -103,15 +100,31 @@ class _PDFBuilderState extends State<PDFBuilder> {
     }else{
       globals.bookmarkedPage=globals.defaultBookmarkedPage;
     }
- }
+  }
+
+  @override
+  void initState() {
+    setState(() {
+      if(globals.bookmarkedPage==null){
+        getBookmark();
+      }
+      //init current page
+      globals.currentPage=widget.pages;
+      pageController= _pageControllerBuilder();
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+
     pageController= _pageControllerBuilder();
     return Scaffold(
       body: FutureBuilder<PDFDocument>(
         future: _getDocument(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
+
             return SafeArea(
               child: PDFView.builder(
                 scrollDirection: Axis.horizontal,
