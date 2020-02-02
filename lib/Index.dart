@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:quran/library/Globals.dart' as globals;
+import 'package:quran/widget/SliderAlert.dart';
 import 'package:screen/screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,11 +19,18 @@ class _IndexState extends State<Index> {
 
   /// Used for Bottom Navigation
   int _selectedIndex = 0;
-
+  /// Screen Brightness
+  double brightness=0.5;
   /// Style of tapped Bottom Navigation item
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  /// Get Screen Brightness
+  void getScreenBrightness() async{
 
+      brightness = await Screen.brightness;
+
+
+  }
   /// Navigation event handler
   _onItemTapped(int index) {
     setState(() {
@@ -51,10 +59,15 @@ class _IndexState extends State<Index> {
         Navigator.push(context, MaterialPageRoute(builder: (context) => SurahViewBuilder(pages: globals.lastViewedPage-1)));
       }
 
-      ///Empty Now
+      /// Customize Screen Brightness
     } else if (index == 2) {
-     // Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
-    }
+      if(brightness==null){
+        getScreenBrightness();
+      }
+      showDialog(context: this.context,
+          builder:(context)=>SliderAlert());
+
+        }
   }
 
   void redirectToLastVisitedSurahView() {
@@ -79,8 +92,15 @@ class _IndexState extends State<Index> {
     }
   }
 
+   @override
+  void initState() {
+     Screen.keepOn(true);
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -88,15 +108,16 @@ class _IndexState extends State<Index> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          leading: IconButton(
+          /*leading: IconButton(
             icon: Icon(
               Icons.tune,
               color: Colors.white,
             ),
             onPressed: (){
-              Screen.setBrightness(0.1);
+              showDialog(context: this.context,
+                  builder:(context)=>SliderAlert());
             },
-          ),
+          ),*/
           title: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -140,7 +161,10 @@ class _IndexState extends State<Index> {
               icon: Icon(Icons.chrome_reader_mode),
               title: Text('مواصلة القراءة'),
             ),
-
+            BottomNavigationBarItem(
+              icon: Icon(Icons.highlight),
+              title: Text('إضاءة الشاشة'),
+            ),
 
           ],
           currentIndex: _selectedIndex,

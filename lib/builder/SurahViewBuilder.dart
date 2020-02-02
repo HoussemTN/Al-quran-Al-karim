@@ -1,9 +1,11 @@
+
 import 'package:device_info/device_info.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 
 import 'package:quran/library/Globals.dart' as globals;
+import 'package:screen/screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Widget/Bookmark.dart';
 import '../Index.dart';
@@ -119,6 +121,8 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
 
   @override
   void initState() {
+    /// Prevent screen from going into sleep mode:
+    Screen.keepOn(true);
     setState(() {
       /// init current page
       globals.currentPage = widget.pages;
