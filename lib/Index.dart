@@ -1,6 +1,8 @@
+
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:quran/library/Globals.dart' as globals;
+import 'package:screen/screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Entity/Surah.dart';
@@ -91,8 +93,8 @@ class _IndexState extends State<Index> {
               Icons.tune,
               color: Colors.white,
             ),
-            onPressed: () {
-
+            onPressed: (){
+              Screen.setBrightness(0.1);
             },
           ),
           title: Row(
@@ -133,6 +135,7 @@ class _IndexState extends State<Index> {
               icon: Icon(Icons.book),
               title: Text('الإنتقال إلى العلامة'),
             ),
+
             BottomNavigationBarItem(
               icon: Icon(Icons.chrome_reader_mode),
               title: Text('مواصلة القراءة'),
