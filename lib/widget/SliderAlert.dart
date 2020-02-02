@@ -3,15 +3,35 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:screen/screen.dart';
-
+import 'package:quran/library/Globals.dart' as globals;
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 class SliderAlert extends StatefulWidget {
   @override
   _SliderAlertState createState() => _SliderAlertState();
 }
 
 class _SliderAlertState extends State<SliderAlert> {
-  double brightness=0.5 ;
+  /// Declare sharedPreferences
+  SharedPreferences prefs ;
+  /// Temp Brightness Level (not save it yet)
+  double tempBrightnessLevel ;
 
+  setBrightnessLevel(double level)async{
+    globals.brightnessLevel=level;
+    prefs = await SharedPreferences.getInstance();
+    prefs.setDouble(globals.BRIGHTNESS_LEVEL, globals.brightnessLevel);
+  }
+  @override
+  void initState() {
+    if(globals.brightnessLevel!=null){
+      setState(() {
+        tempBrightnessLevel=globals.brightnessLevel;
+      });
+
+    }
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,26 +46,39 @@ class _SliderAlertState extends State<SliderAlert> {
                   size: 24,
                 ),
                 Slider(
-                  value: brightness,
+                  value: tempBrightnessLevel,
                   onChanged: (_brightness){
                     setState(() {
-                      brightness=_brightness;
+                      tempBrightnessLevel=_brightness;
                     });
-                    Screen.setBrightness(_brightness);
+                    Screen.setBrightness(tempBrightnessLevel);
                   },
                   max: 1,
-                  label: "$brightness",
-                  divisions: 5,),
+                  label: "$tempBrightnessLevel",
+                  divisions: 10,),
               ],
             ),
           ),
         actions: <Widget>[
           FlatButton(
             child: Text("إلغاء",textDirection: TextDirection.rtl,),
-            onPressed: null,),
+            onPressed:(){
+              Navigator.of(context).pop();
+            }),
           FlatButton(
             child: Text("حفظ",textDirection: TextDirection.rtl,),
-            onPressed: null,),
+            onPressed: (){
+              setBrightnessLevel(tempBrightnessLevel);
+              Navigator.of(context).pop();
+              Fluttertoast.showToast(
+                  msg:" تم الحفظ بنجاح",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.BOTTOM,
+                  backgroundColor: Colors.green,
+                  textColor: Colors.white,
+                  fontSize: 18.0
+              );
+            },),
 
         ],
       ),

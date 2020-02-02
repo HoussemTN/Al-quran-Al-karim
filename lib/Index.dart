@@ -19,17 +19,13 @@ class _IndexState extends State<Index> {
 
   /// Used for Bottom Navigation
   int _selectedIndex = 0;
-  /// Screen Brightness
-  double brightness=0.5;
+
   /// Style of tapped Bottom Navigation item
   static const TextStyle optionStyle =
   TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   /// Get Screen Brightness
   void getScreenBrightness() async{
-
-      brightness = await Screen.brightness;
-
-
+      globals.brightnessLevel = await Screen.brightness;
   }
   /// Navigation event handler
   _onItemTapped(int index) {
@@ -42,7 +38,7 @@ class _IndexState extends State<Index> {
       setState(() {
         /// in case Bookmarked page is null (Bookmarked page initialized in splash screen)
         if (globals.bookmarkedPage == null) {
-          globals.bookmarkedPage = globals.defaultBookmarkedPage;
+          globals.bookmarkedPage = globals.DEFAULT_BOOKMARKED_PAGE;
         }
       });
       Navigator.of(context).pushAndRemoveUntil(
@@ -61,7 +57,7 @@ class _IndexState extends State<Index> {
 
       /// Customize Screen Brightness
     } else if (index == 2) {
-      if(brightness==null){
+      if(globals.brightnessLevel==null){
         getScreenBrightness();
       }
       showDialog(context: this.context,
@@ -94,6 +90,8 @@ class _IndexState extends State<Index> {
 
    @override
   void initState() {
+     /// set saved Brightness level
+     Screen.setBrightness(globals.brightnessLevel);
      Screen.keepOn(true);
 
     super.initState();

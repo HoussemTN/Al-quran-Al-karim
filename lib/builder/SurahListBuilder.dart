@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../Entity/Surah.dart';
 import 'SurahViewBuilder.dart';
-import 'package:quran/library/Globals.dart' as globals;
+
 
 class SurahListBuilder extends StatefulWidget {
   final List<Surah> surah;

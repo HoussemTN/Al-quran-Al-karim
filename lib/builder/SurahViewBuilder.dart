@@ -72,7 +72,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
       setState(() {
         /// in case Bookmarked page is null (Bookmarked page initialized in splash screen)
         if (globals.bookmarkedPage == null) {
-          globals.bookmarkedPage = globals.defaultBookmarkedPage;
+          globals.bookmarkedPage = globals.DEFAULT_BOOKMARKED_PAGE;
         }
       });
       Navigator.of(context).pushAndRemoveUntil(
