@@ -3,20 +3,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:native_pdf_view/native_pdf_view.dart';
 
-import 'package:quran/globals.dart' as globals;
+import 'package:quran/library/Globals.dart' as globals;
 import 'package:shared_preferences/shared_preferences.dart';
 import '../Widget/Bookmark.dart';
 import '../Index.dart';
 
-class PDFBuilder extends StatefulWidget {
-  PDFBuilder({Key key, @required this.pages}) : super(key: key);
+class SurahViewBuilder extends StatefulWidget {
+  SurahViewBuilder({Key key, @required this.pages}) : super(key: key);
   final int pages;
 
   @override
-  _PDFBuilderState createState() => _PDFBuilderState();
+  _SurahViewBuilderState createState() => _SurahViewBuilderState();
 }
 
-class _PDFBuilderState extends State<PDFBuilder> {
+class _SurahViewBuilderState extends State<SurahViewBuilder> {
   /// My Document
   PDFDocument _document;
 
@@ -34,16 +34,20 @@ class _PDFBuilderState extends State<PDFBuilder> {
 
   /// Used for Bottom Navigation
   int _selectedIndex = 0;
+
   /// Style of tapped Bottom Navigation item
   static const TextStyle optionStyle =
       TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+
   /// Declare SharedPreferences
   SharedPreferences prefs;
+
   /// Load PDF Documents
   Future<PDFDocument> _getDocument() async {
     if (_document != null) {
       return _document;
     }
+
     /// Check Compatibility's [Android 5.0+]
     if (await hasSupport()) {
       return _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
@@ -55,22 +59,24 @@ class _PDFBuilderState extends State<PDFBuilder> {
     }
   }
 
-  // navigation event handler
-  _onItemTapped(int index, PageController _pageController) {
+  /// Navigation event handler
+  _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
-    //Go to Bookmarked page
+
+    /// Go to Bookmarked page
     if (index == 0) {
       setState(() {
-        if (globals.bookmarkedPage != null) {
-          getBookmark();
+        /// in case Bookmarked page is null (Bookmarked page initialized in splash screen)
+        if (globals.bookmarkedPage == null) {
+          globals.bookmarkedPage = globals.defaultBookmarkedPage;
         }
       });
       Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
               builder: (context) =>
-                  PDFBuilder(pages: globals.bookmarkedPage - 1)),
+                  SurahViewBuilder(pages: globals.bookmarkedPage - 1)),
           (Route<dynamic> route) => false);
 
       //Bookmark this page
@@ -94,38 +100,31 @@ class _PDFBuilderState extends State<PDFBuilder> {
         initialPage: widget.pages, viewportFraction: 1.1, keepPage: true);
   }
 
-  // set bookmarkPage in sharedPreferences
-  void setBookmark(int page) async {
+  /// set bookmarkPage in sharedPreferences
+  void setBookmark(int _page) async {
     prefs = await SharedPreferences.getInstance();
-    if (page != null && !page.isNaN) {
-      await prefs.setInt('bookmarkedPage', page);
+    if (_page != null && !_page.isNaN) {
+      await prefs.setInt(globals.BOOKMARKED_PAGE, _page);
     }
   }
 
-  // get bookmarkPage from sharedPreferences
-  getBookmark() async {
+  /// set lastViewedPage in sharedPreferences
+  void setLastViewedPage(int _currentPage) async {
     prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey('bookmarkedPage')) {
-      var bookmarkedPage = prefs.getInt('bookmarkedPage');
-      setState(() {
-        globals.bookmarkedPage = bookmarkedPage;
-      });
-      // if not found return default value
-    } else {
-      globals.bookmarkedPage = globals.defaultBookmarkedPage;
+    if (_currentPage != null && !_currentPage.isNaN) {
+      prefs.setInt(globals.LAST_VIEWED_PAGE, _currentPage);
+      globals.lastViewedPage = prefs.getInt(globals.LAST_VIEWED_PAGE);
     }
   }
 
   @override
   void initState() {
     setState(() {
-      if (globals.bookmarkedPage == null) {
-        getBookmark();
-      }
-      //init current page
+      /// init current page
       globals.currentPage = widget.pages;
       pageController = _pageControllerBuilder();
     });
+
     super.initState();
   }
 
@@ -145,12 +144,16 @@ class _PDFBuilderState extends State<PDFBuilder> {
                 builder: (PDFPageImage pageImage, bool isCurrentIndex) {
                   currentPage = pageImage.pageNumber;
                   globals.currentPage = currentPage;
+                  /// Update lastViewedPage
+                  setLastViewedPage(currentPage);
+
                   if (currentPage == globals.bookmarkedPage) {
                     isBookmarked = true;
                   } else {
                     isBookmarked = false;
                   }
                   print("$isBookmarked:$currentPage");
+
                   if (isBookmarked) {
                     _bookmarkWidget = Bookmark();
                   } else {
@@ -212,8 +215,8 @@ class _PDFBuilderState extends State<PDFBuilder> {
           } else if (snapshot.hasError) {
             return Center(
               child: Text(
-                'PDF Rendering does not '
-                'support on the system of this version',
+                'المعذرة لا يمكن طباعة المحتوى'
+                'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
               ),
             );
           } else {
@@ -238,7 +241,7 @@ class _PDFBuilderState extends State<PDFBuilder> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.grey[600],
-        onTap: (index) => _onItemTapped(index, pageController),
+        onTap: (index) => _onItemTapped(index),
       ),
     );
   }

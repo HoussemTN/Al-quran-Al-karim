@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:quran/Builder/PDFBuilder.dart';
 import '../Entity/Surah.dart';
+import 'SurahViewBuilder.dart';
+import 'package:quran/library/Globals.dart' as globals;
 
 class SurahListBuilder extends StatefulWidget {
   final List<Surah> surah;
@@ -22,6 +23,7 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
     }
     surah.addAll(widget.surah);
   }
+
 
   void filterSearchResults(String query) {
     /// Fill surah list if empty
@@ -65,6 +67,7 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
       child: Column(
         children: <Widget>[
@@ -107,7 +110,7 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
                         context,
                         MaterialPageRoute(
                             builder: (context) =>
-                                PDFBuilder(pages: surah[index].pages)));
+                                SurahViewBuilder(pages: surah[index].pages)));
                   }),
             ),
           ),
