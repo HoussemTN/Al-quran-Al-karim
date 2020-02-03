@@ -74,6 +74,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
           Center(
             child: Container(
+              margin: EdgeInsets.symmetric(horizontal:20.0),
               child: Text(
                 "بِسْم اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ",
                 style: TextStyle(
