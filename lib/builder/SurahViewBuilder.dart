@@ -27,7 +27,6 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
 
   /// Current Page init (on page changed)
   int currentPage;
-
   /// Init Page Controller
   PageController pageController;
 
@@ -36,11 +35,6 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
 
   /// Used for Bottom Navigation
   int _selectedIndex = 0;
-
-  /// Style of tapped Bottom Navigation item
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-
   /// Declare SharedPreferences
   SharedPreferences prefs;
 
@@ -52,7 +46,8 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
 
     /// Check Compatibility's [Android 5.0+]
     if (await hasSupport()) {
-      return _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
+       _document = await PDFDocument.openAsset('assets/pdf/quran.pdf');
+       return _document ;
     } else {
       throw Exception(
         'المعذرة لا يمكن طباعة المحتوى'
@@ -93,7 +88,8 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
 
       //got to index
     } else if (index == 2) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
+        Navigator.push(context, MaterialPageRoute(builder: (context) => Index()));
+
     }
   }
 
@@ -119,6 +115,10 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
     }
   }
 
+  closePage(page)async{
+    await page.close();
+  }
+
   @override
   void initState() {
     /// Prevent screen from going into sleep mode:
@@ -132,11 +132,13 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
     super.initState();
   }
 
+
   @override
   Widget build(BuildContext context) {
     pageController = _pageControllerBuilder();
     return Scaffold(
       body: FutureBuilder<PDFDocument>(
+
         future: _getDocument(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
@@ -146,6 +148,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
                 document: snapshot.data,
                 controller: pageController,
                 builder: (PDFPageImage pageImage, bool isCurrentIndex) {
+
                   currentPage = pageImage.pageNumber;
                   globals.currentPage = currentPage;
                   /// Update lastViewedPage
@@ -245,6 +248,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
         ],
         currentIndex: _selectedIndex,
         selectedItemColor: Colors.grey[600],
+        selectedFontSize: 12,
         onTap: (index) => _onItemTapped(index),
       ),
     );
@@ -256,4 +260,5 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
     bool hasSupport = androidInfo.version.sdkInt >= 21;
     return hasSupport;
   }
+
 }

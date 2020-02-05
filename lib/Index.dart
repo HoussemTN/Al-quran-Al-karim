@@ -4,7 +4,6 @@ import 'dart:convert';
 import 'package:quran/library/Globals.dart' as globals;
 import 'package:quran/widget/SliderAlert.dart';
 import 'package:screen/screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'Entity/Surah.dart';
 import 'Builder/SurahListBuilder.dart';
@@ -20,9 +19,6 @@ class _IndexState extends State<Index> {
   /// Used for Bottom Navigation
   int _selectedIndex = 0;
 
-  /// Style of tapped Bottom Navigation item
-  static const TextStyle optionStyle =
-  TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   /// Get Screen Brightness
   void getScreenBrightness() async{
       globals.brightnessLevel = await Screen.brightness;
@@ -49,7 +45,7 @@ class _IndexState extends State<Index> {
 
       /// Continue reading
     } else if (index == 1) {
-      getLastViewedPage();
+     //
       if (globals.lastViewedPage != null) {
         /// Push to Quran view ([int pages] represent surah page(reversed index))
         Navigator.push(context, MaterialPageRoute(builder: (context) => SurahViewBuilder(pages: globals.lastViewedPage-1)));
@@ -77,16 +73,7 @@ class _IndexState extends State<Index> {
     }
   }
 
-  /// get bookmarkPage from sharedPreferences
-  getLastViewedPage() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    if (prefs.containsKey(globals.LAST_VIEWED_PAGE)) {
-      var _lastViewedPage = prefs.getInt(globals.LAST_VIEWED_PAGE);
-      setState(() {
-        globals.lastViewedPage = _lastViewedPage;
-      });
-    }
-  }
+
 
    @override
   void initState() {
@@ -166,7 +153,8 @@ class _IndexState extends State<Index> {
 
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.grey[600],
+            selectedItemColor: Colors.grey[600],
+          selectedFontSize: 12,
           onTap: (index) => _onItemTapped(index),
         ),
       ),

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:quran/library/Globals.dart' as globals;
-import 'package:screen/screen.dart';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +14,16 @@ class _SplashScreenState extends State<SplashScreen> {
   /// Declare SharedPreferences
   SharedPreferences prefs;
 
+  /// get bookmarkPage from sharedPreferences
+  getLastViewedPage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    if (prefs.containsKey(globals.LAST_VIEWED_PAGE)) {
+      var _lastViewedPage = prefs.getInt(globals.LAST_VIEWED_PAGE);
+      setState(() {
+        globals.lastViewedPage = _lastViewedPage;
+      });
+    }
+  }
   /// Get saved Brightness or the default value if Brightness level is not defined
   getBrightnessLevel()async{
     prefs = await SharedPreferences.getInstance();
@@ -43,11 +52,13 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
+
   @override
   void initState() {
     /// get Saved preferences
     getBookmark();
     getBrightnessLevel();
+    getLastViewedPage();
      Timer(Duration(seconds: 3),
               () => Navigator.pushReplacementNamed(context, "index"));
     super.initState();
