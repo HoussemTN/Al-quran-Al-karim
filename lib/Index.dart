@@ -45,7 +45,6 @@ class _IndexState extends State<Index> {
 
       /// Continue reading
     } else if (index == 1) {
-     //
       if (globals.lastViewedPage != null) {
         /// Push to Quran view ([int pages] represent surah page(reversed index))
         Navigator.push(context, MaterialPageRoute(builder: (context) => SurahViewBuilder(pages: globals.lastViewedPage-1)));
