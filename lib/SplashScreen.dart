@@ -4,7 +4,6 @@ import 'package:quran/library/Globals.dart' as globals;
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 class SplashScreen extends StatefulWidget {
   @override
   createState() => _SplashScreenState();
@@ -24,16 +23,17 @@ class _SplashScreenState extends State<SplashScreen> {
       });
     }
   }
+
   /// Get saved Brightness or the default value if Brightness level is not defined
-  getBrightnessLevel()async{
+  getBrightnessLevel() async {
     prefs = await SharedPreferences.getInstance();
     if (prefs.containsKey(globals.BRIGHTNESS_LEVEL)) {
       var _brightnessLevel = prefs.getDouble(globals.BRIGHTNESS_LEVEL);
       setState(() {
         globals.brightnessLevel = _brightnessLevel;
       });
-    }else{
-      globals.brightnessLevel=globals.DEFAULT_BRIGHTNESS_LEVEL;
+    } else {
+      globals.brightnessLevel = globals.DEFAULT_BRIGHTNESS_LEVEL;
     }
   }
 
@@ -52,15 +52,14 @@ class _SplashScreenState extends State<SplashScreen> {
     }
   }
 
-
   @override
   void initState() {
     /// get Saved preferences
     getBookmark();
     getBrightnessLevel();
     getLastViewedPage();
-     Timer(Duration(seconds: 3),
-              () => Navigator.pushReplacementNamed(context, "index"));
+    Timer(Duration(seconds: 3),
+        () => Navigator.pushReplacementNamed(context, "index"));
     super.initState();
   }
 
@@ -85,7 +84,7 @@ class _SplashScreenState extends State<SplashScreen> {
           ),
           Center(
             child: Container(
-              margin: EdgeInsets.symmetric(horizontal:20.0),
+              margin: EdgeInsets.symmetric(horizontal: 20.0),
               child: Text(
                 "بِسْم اللَّـهِ الرَّحْمَـٰنِ الرَّحِيمِ",
                 style: TextStyle(

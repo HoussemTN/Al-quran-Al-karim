@@ -29,7 +29,7 @@ class Surah {
       titleAr: json['titleAr'] as String,
       index: json['index'] as String,
       // reversed pages
-      pages:  569-int.parse(json['pages']),
+      pages: 569 - int.parse(json['pages']),
       pageIndex: int.parse(json['pages']),
       juzIndex: json['juzIndex'] as String,
     );

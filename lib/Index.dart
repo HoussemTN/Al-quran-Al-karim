@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:quran/library/Globals.dart' as globals;
@@ -15,14 +14,14 @@ class Index extends StatefulWidget {
 }
 
 class _IndexState extends State<Index> {
-
   /// Used for Bottom Navigation
   int _selectedIndex = 0;
 
   /// Get Screen Brightness
-  void getScreenBrightness() async{
-      globals.brightnessLevel = await Screen.brightness;
+  void getScreenBrightness() async {
+    globals.brightnessLevel = await Screen.brightness;
   }
+
   /// Navigation event handler
   _onItemTapped(int index) {
     setState(() {
@@ -41,24 +40,26 @@ class _IndexState extends State<Index> {
           MaterialPageRoute(
               builder: (context) =>
                   SurahViewBuilder(pages: globals.bookmarkedPage - 1)),
-              (Route<dynamic> route) => false);
+          (Route<dynamic> route) => false);
 
       /// Continue reading
     } else if (index == 1) {
       if (globals.lastViewedPage != null) {
         /// Push to Quran view ([int pages] represent surah page(reversed index))
-        Navigator.push(context, MaterialPageRoute(builder: (context) => SurahViewBuilder(pages: globals.lastViewedPage-1)));
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    SurahViewBuilder(pages: globals.lastViewedPage - 1)));
       }
 
       /// Customize Screen Brightness
     } else if (index == 2) {
-      if(globals.brightnessLevel==null){
+      if (globals.brightnessLevel == null) {
         getScreenBrightness();
       }
-      showDialog(context: this.context,
-          builder:(context)=>SliderAlert());
-
-        }
+      showDialog(context: this.context, builder: (context) => SliderAlert());
+    }
   }
 
   void redirectToLastVisitedSurahView() {
@@ -72,19 +73,17 @@ class _IndexState extends State<Index> {
     }
   }
 
-
-
-   @override
+  @override
   void initState() {
-     /// set saved Brightness level
-     Screen.setBrightness(globals.brightnessLevel);
-     Screen.keepOn(true);
+    /// set saved Brightness level
+    Screen.setBrightness(globals.brightnessLevel);
+    Screen.keepOn(true);
 
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       theme: ThemeData(
         primarySwatch: Colors.green,
@@ -140,7 +139,6 @@ class _IndexState extends State<Index> {
               icon: Icon(Icons.book),
               title: Text('الإنتقال إلى العلامة'),
             ),
-
             BottomNavigationBarItem(
               icon: Icon(Icons.chrome_reader_mode),
               title: Text('مواصلة القراءة'),
@@ -149,10 +147,9 @@ class _IndexState extends State<Index> {
               icon: Icon(Icons.highlight),
               title: Text('إضاءة الشاشة'),
             ),
-
           ],
           currentIndex: _selectedIndex,
-            selectedItemColor: Colors.grey[600],
+          selectedItemColor: Colors.grey[600],
           selectedFontSize: 12,
           onTap: (index) => _onItemTapped(index),
         ),
