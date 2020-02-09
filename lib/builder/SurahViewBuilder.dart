@@ -182,7 +182,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
                             inertialSpeed: 100,
                             //inPageView: true,
                             initialScale: 1,
-                            cacheGesture: true,
+                            cacheGesture: false,
                           ),
                           onDoubleTap: (ExtendedImageGestureState state) {
                             final pointerDownPosition =
