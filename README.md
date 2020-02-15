@@ -3,7 +3,7 @@
 The Noble Qur’an - Hafs from Asim [Arabic Edition] 
 <br>
  <a href='https://play.google.com/store/apps/details?id=com.brains404.quran&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img  align="center" width='200' height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
-
+ 
 ## :information_source: Some Informations about the data we use
 |Data |Number|
 |-------------|-------------|
@@ -22,6 +22,10 @@ The Noble Qur’an - Hafs from Asim [Arabic Edition]
 |  Surah Bookmarking |:white_check_mark:|
 |  Surah Classification |:white_check_mark:|
 |  Always lit screen |:white_check_mark:|
+
+## Changelog
+### Version 1
+ * First Release
 
 ## :camera: Screenshots
 
