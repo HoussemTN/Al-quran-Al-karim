@@ -2,16 +2,8 @@
 <img  align="left" alt="Scheduler" src="https://github.com/HoussemTN/Al-quran-Al-karim/blob/master/assets/images/logo.png?raw=true" heigth="100px" width="100px"/>
 The Noble Qur’an - Hafs from Asim [Arabic Edition] 
 <br>
- <a href='https://play.google.com/store/apps/details?id=com.brains404.quran&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img  align="center" width='200' height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'/></a>
+ <a href='https://play.google.com/store/apps/details?id=com.brains404.quran&pcampaignid=MKT-Other-global-all-co-prtnr-py-PartBadge-Mar2515-1'><img  align="center" width='200' height='80' alt='Get it on Google Play' src='https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png'></a>
  
-## :information_source: Some Informations about the data we use
-|Data |Number|
-|-------------|-------------|
-|Verses |~6236|
-|Chapters |114|
-|Juz's |30|
-|Pages|569|
-
 ## :boom: Features
 
 | Feature |Status|
@@ -26,6 +18,14 @@ The Noble Qur’an - Hafs from Asim [Arabic Edition]
 ## Changelog
 ### Version 1
  * First Release
+
+## :information_source: Some Informations about the data we use
+|Data |Number|
+|-------------|-------------|
+|Verses |~6236|
+|Chapters |114|
+|Juz's |30|
+|Pages|569|
 
 ## :camera: Screenshots
 
@@ -50,7 +50,6 @@ The Noble Qur’an - Hafs from Asim [Arabic Edition]
   <img  alt="List_Sessions" src="https://github.com/HoussemTN/Al-quran-Al-karim/blob/master/screenshots/controlLight.jpeg?raw=true"          heigth="250px" width="300px"/>
     <br/>    <br/>
     
-
    
  ## :gift_heart: Want to contribute
 If you would like to contribute to the project (e.g. by improving the documentation, solving a bug or adding a cool new feature),Just send us your pull request. Please make sure you solved all warnings and errors reported by the static code analyses.
