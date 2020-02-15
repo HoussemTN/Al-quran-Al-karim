@@ -15,10 +15,6 @@ The Noble Qur’an - Hafs from Asim [Arabic Edition]
 |  Surah Classification |:white_check_mark:|
 |  Always lit screen |:white_check_mark:|
 
-## Changelog
-### Version 1
- * First Release
-
 ## :information_source: Some Informations about the data we use
 |Data |Number|
 |-------------|-------------|
@@ -27,6 +23,10 @@ The Noble Qur’an - Hafs from Asim [Arabic Edition]
 |Juz's |30|
 |Pages|569|
 
+##  :bookmark_tabs: Changelog
+### Version 1
+ * First Release
+ 
 ## :camera: Screenshots
 
 * Index  : <br/> <br/>
