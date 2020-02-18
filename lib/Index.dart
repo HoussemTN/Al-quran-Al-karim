@@ -4,8 +4,8 @@ import 'package:quran/library/Globals.dart' as globals;
 import 'package:quran/widget/SliderAlert.dart';
 import 'package:screen/screen.dart';
 
-import 'Entity/Surah.dart';
-import 'Builder/SurahListBuilder.dart';
+import 'entity/Surah.dart';
+import 'builder/SurahListBuilder.dart';
 import 'builder/SurahViewBuilder.dart';
 
 class Index extends StatefulWidget {
