@@ -6,7 +6,7 @@ import 'package:native_pdf_view/native_pdf_view.dart';
 import 'package:quran/library/Globals.dart' as globals;
 import 'package:screen/screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../Widget/Bookmark.dart';
+import '../widget/Bookmark.dart';
 import '../Index.dart';
 
 class SurahViewBuilder extends StatefulWidget {
