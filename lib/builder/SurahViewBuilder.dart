@@ -52,7 +52,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
     } else {
       throw Exception(
         'المعذرة لا يمكن طباعة المحتوى'
-        'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
+            'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
       );
     }
   }
@@ -75,7 +75,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
           MaterialPageRoute(
               builder: (context) =>
                   SurahViewBuilder(pages: globals.bookmarkedPage - 1)),
-          (Route<dynamic> route) => false);
+              (Route<dynamic> route) => false);
 
       //Bookmark this page
     } else if (index == 1) {
@@ -221,7 +221,7 @@ class _SurahViewBuilderState extends State<SurahViewBuilder> {
             return Center(
               child: Text(
                 'المعذرة لا يمكن طباعة المحتوى'
-                'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
+                    'يرجي التحقق من أن جهازك يدعم نظام أندرويد بنسخته 5 على الأقل',
               ),
             );
           } else {

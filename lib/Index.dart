@@ -91,14 +91,13 @@ class _IndexState extends State<Index> {
       ),
       home: Scaffold(
         appBar: AppBar(
-          /*leading: IconButton(
+         /* leading: IconButton(
             icon: Icon(
-              Icons.tune,
+              Icons.directions,
               color: Colors.white,
             ),
             onPressed: (){
-              showDialog(context: this.context,
-                  builder:(context)=>SliderAlert());
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context) => ()),);
             },
           ),*/
           title: Row(

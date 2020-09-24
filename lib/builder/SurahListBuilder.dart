@@ -15,7 +15,7 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
   TextEditingController editingController = TextEditingController();
 
   List<Surah> surah = List<Surah>();
-
+   bool _showClearButton=false;
   void initSurahListView() {
     if (surah.isNotEmpty) {
       surah.clear();
@@ -80,14 +80,30 @@ class _SurahListBuilderState extends State<SurahListBuilder> {
               onChanged: (value) {
                 filterSearchResults(value);
                 print(value);
+                setState(() {
+                  _showClearButton= value.length>0 ? true:false;
+                });
               },
               controller: editingController,
               decoration: InputDecoration(
+                suffixIcon: _showClearButton==true ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        editingController.clear();
+                        initSurahListView();
+                        _showClearButton=false;
+                      });
+
+                    } ,
+                    icon: Icon(Icons.clear)
+                ):null,
                   labelText: "البحث عن سورة",
                   // hintText: "البحث",
                   prefixIcon: Icon(Icons.search),
                   border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(10.0)))),
+                      borderRadius: BorderRadius.all(Radius.circular(10.0))),
+              ),
+
             ),
           ),
 
