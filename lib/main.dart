@@ -23,8 +23,8 @@ class _MyAppState extends State<MyApp> {
         },
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
-          primarySwatch: Colors.green,
-          primaryColor: Colors.green,
+          primarySwatch: Colors.blue,
+          primaryColor: Colors.blue,
         ),
         home: SplashScreen());
   }
