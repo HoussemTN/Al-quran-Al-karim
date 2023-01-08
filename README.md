@@ -18,7 +18,7 @@ The Noble Qur’an - Hafs from Asim [Arabic Edition]
 |  Surah Classification |:white_check_mark:|
 |  Always lit screen |:white_check_mark:|
 
-## :information_source: Some Informations about the data we use
+## :information_source: Some Information about the data we use
 |Data |Number|
 |-------------|-------------|
 |Verses |~6236|
